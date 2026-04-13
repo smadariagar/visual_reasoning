@@ -1,0 +1,10 @@
+# Ignorar absolutamente todo por defecto
+/*
+
+# Excepto el archivo .gitignore y la carpeta src
+!/.gitignore
+!/src/
+
+# Si dentro de src hay cosas que NO quieres (ej. carpetas __pycache__ o .ipynb_checkpoints)
+**/__pycache__/
+**/.DS_Store
