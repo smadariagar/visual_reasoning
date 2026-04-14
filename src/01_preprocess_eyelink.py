@@ -6,6 +6,23 @@ import pickle
 import scipy.ndimage
 from tqdm import tqdm
 
+
+def obtener_resolucion_pantalla(asc_file):
+    """Busca la resolución en la cabecera del .asc antes de que MNE lo procese."""
+    with open(asc_file, 'r') as f:
+        for linea in f:
+            if 'DISPLAY_COORDS' in linea:
+                partes = linea.split()
+                # Sumamos 1 porque las coordenadas van de 0 a 1919 (1920 píxeles)
+                ancho = int(partes[-2]) + 1  
+                alto = int(partes[-1]) + 1   
+                return ancho, alto
+            # Si llegamos a los datos numéricos, cortamos la búsqueda
+            if linea[0].isdigit(): 
+                break
+    # Valores por defecto en caso de que el archivo no tenga la cabecera
+    return 1920, 1080
+
 def get_image_list(file_folder):
     """Saca los nombres de las imágenes de los archivos MODULO.dat"""
     img_mod_1, img_mod_2 = [], []
@@ -21,6 +38,11 @@ def get_image_list(file_folder):
 def procesar_datos_eyelink(file_folder, fname):
     """Carga y procesa el archivo .asc, extrayendo eventos y posiciones oculares."""
     file_name = os.path.join(file_folder, fname + '.asc')
+
+    # Extraer la resolución de la pantalla ANTES de pasarlo a MNE
+    ancho_pantalla, alto_pantalla = obtener_resolucion_pantalla(file_name)
+
+    # Procesamiento normal con MNE
     raw = mne.io.read_raw_eyelink(file_name, apply_offsets=False, verbose=False)
     
     # Extraer eventos
@@ -76,7 +98,8 @@ def procesar_datos_eyelink(file_folder, fname):
         "x_left": x_left, "y_left": y_left, "x_right": x_right, "y_right": y_right,
         "images_list": get_image_list(file_folder),
         "responses": responses,
-        "events": (time_fix_cross, time_stim_pres, time_keyboard)
+        "events": (time_fix_cross, time_stim_pres, time_keyboard),
+        "screen_resolution": (ancho_pantalla, alto_pantalla)
     }
 
     with open(os.path.join(file_folder, fname+'.dat'), 'wb') as f:
