@@ -330,7 +330,7 @@ def recorrer_sujetos():
 
                 cajas_validas, cajas_id_original = obtener_cajas_de_imagen(img_name)
 
-                # grafico_trial(x_raw, y_raw, x_left, y_left, time_trial, oc_data_trial, ruta_res_trial, str(index))
+                grafico_trial(x_raw, y_raw, x_left, y_left, time_trial, oc_data_trial, ruta_res_trial, str(index))
                 # grafico_yarbus_trial(x_raw, y_raw, x_left, y_left, oc_data_trial, img_name, ruta_yarbus_trial,  str(index))
 
                 if tiene_calibracion:

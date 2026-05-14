@@ -55,8 +55,9 @@ def procesar_datos_eyelink(file_folder, fname):
 
     # Extraer datos de posición
     eye_data, time_array = raw.get_data(picks=['xpos_left', 'ypos_left', 'xpos_right', 'ypos_right', 'pupil_left', 'pupil_right'], return_times=True)
-    x_left, y_left, x_right, y_right = eye_data[0].copy(), eye_data[1].copy(), eye_data[2].copy(), eye_data[3].copy()
+    x_left_raw, y_left_raw, x_right_raw, y_right_raw = eye_data[0].copy(), eye_data[1].copy(), eye_data[2].copy(), eye_data[3].copy()
     pupil_left = eye_data[4].copy()
+    x_left, y_left, x_right, y_right = x_left_raw, y_left_raw, x_right_raw, y_right_raw 
 
     # Procesamiento de pestañeos y dilatación
     mascara_blink = (pupil_left == 0)
@@ -96,6 +97,7 @@ def procesar_datos_eyelink(file_folder, fname):
     datos = {
         "time_array": time_array, 
         "x_left": x_left, "y_left": y_left, "x_right": x_right, "y_right": y_right,
+        "x_left_raw": x_left_raw, "y_left_raw": y_left_raw, "x_right_raw": x_right_raw, "y_right_raw": y_right_raw,
         "images_list": get_image_list(file_folder),
         "responses": responses,
         "events": (time_fix_cross, time_stim_pres, time_keyboard),
