@@ -29,7 +29,7 @@ def grafico_comportamiento_temporal(x_raw, y_raw, x_left, y_left, time, t_stim, 
     ax[1].plot(time, y_left, color='k', linewidth=2)
 
     num_fijaciones = int(len(oc_data)*1.5)
-    print(num_fijaciones)
+    #print(num_fijaciones)
 
     colores = cm.hsv(np.linspace(0, 1, num_fijaciones))
 
@@ -90,6 +90,9 @@ if __name__ == "__main__":
         ruta_yarbus_adj = os.path.join(ruta_resultados, 'yarbus_trials_ajustados/')
         ruta_secuencias = os.path.join(ruta_resultados, 'secuencias/')        
         
+        for ruta in [ruta_resultados, ruta_res_trial, ruta_yarbus_trial, ruta_yarbus_adj, ruta_secuencias]:
+            os.makedirs(ruta, exist_ok=True)    
+
         if not os.path.exists(dat_file) or not os.path.exists(answ_file):
             continue
             
@@ -142,5 +145,4 @@ if __name__ == "__main__":
             # 1. Graficar Comportamiento Temporal Crudo (oc_trials)
             grafico_comportamiento_temporal(x_l_raw, y_l_raw, x_l, y_l, t_raw, t_stim, oc_data_trial, save_oc, index)
             
-        # Break temporal para que pruebes con el primer sujeto y valides el diseño
-        break
+        #break

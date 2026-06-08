@@ -235,4 +235,4 @@ if __name__ == "__main__":
 
 
         # Break temporal para que pruebes con el primer sujeto y valides el diseño
-        break
+        #break

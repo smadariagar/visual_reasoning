@@ -119,4 +119,4 @@ if __name__ == "__main__":
         if not os.path.exists(dat_file):
             procesar_datos_eyelink(file_folder, fname)
 
-        break
+        #break
