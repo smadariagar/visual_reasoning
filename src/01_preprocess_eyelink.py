@@ -116,7 +116,7 @@ if __name__ == "__main__":
         file_folder = os.path.join(data_path, fname)
         dat_file = os.path.join(file_folder, fname + '.dat')
         
-        if not os.path.exists(dat_file):
-            procesar_datos_eyelink(file_folder, fname)
+        #if not os.path.exists(dat_file):
+        procesar_datos_eyelink(file_folder, fname)
 
         #break

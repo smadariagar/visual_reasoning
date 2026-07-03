@@ -72,6 +72,7 @@ def grafico_comportamiento_temporal(x_raw, y_raw, x_left, y_left, time, t_stim, 
 # ==========================================
 
 if __name__ == "__main__":
+    
     # Rutas base
     data_path = '/home/samuel/Documentos/Visual_Reasoning/data/processed/'
     img_path_base = '/home/samuel/Documentos/Visual_Reasoning/img_question/img_test/'
@@ -85,12 +86,9 @@ if __name__ == "__main__":
         comp_oc_file = os.path.join(file_folder, fname + '_oc_events.csv')
 
         ruta_resultados = os.path.join(file_folder, 'results/')
-        ruta_res_trial = os.path.join(ruta_resultados, 'oc_trials/')
-        ruta_yarbus_trial = os.path.join(ruta_resultados, 'yarbus_trials/')
-        ruta_yarbus_adj = os.path.join(ruta_resultados, 'yarbus_trials_ajustados/')
-        ruta_secuencias = os.path.join(ruta_resultados, 'secuencias/')        
+        ruta_res_trial = os.path.join(ruta_resultados, 'oc_trials/')     
         
-        for ruta in [ruta_resultados, ruta_res_trial, ruta_yarbus_trial, ruta_yarbus_adj, ruta_secuencias]:
+        for ruta in [ruta_resultados, ruta_res_trial]:
             os.makedirs(ruta, exist_ok=True)    
 
         if not os.path.exists(dat_file) or not os.path.exists(answ_file):
@@ -140,9 +138,8 @@ if __name__ == "__main__":
             # Nombres de guardado
             nombre_base = f"{fname}_trial_{index:03d}"
             save_oc = os.path.join(ruta_res_trial, f"{nombre_base}_temporal.png")
-            save_yarbus = os.path.join(ruta_yarbus_trial, f"{nombre_base}_yarbus.png")
             
-            # 1. Graficar Comportamiento Temporal Crudo (oc_trials)
+            # Graficar Comportamiento Temporal Crudo (oc_trials)
             grafico_comportamiento_temporal(x_l_raw, y_l_raw, x_l, y_l, t_raw, t_stim, oc_data_trial, save_oc, index)
             
         #break

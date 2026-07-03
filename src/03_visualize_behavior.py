@@ -161,12 +161,10 @@ if __name__ == "__main__":
         comp_oc_file = os.path.join(file_folder, fname + '_oc_events.csv')
 
         ruta_resultados = os.path.join(file_folder, 'results/')
-        ruta_res_trial = os.path.join(ruta_resultados, 'oc_trials/')
         ruta_yarbus_trial = os.path.join(ruta_resultados, 'yarbus_trials/')
-        ruta_yarbus_adj = os.path.join(ruta_resultados, 'yarbus_trials_ajustados/')
         ruta_heat_map = os.path.join(ruta_resultados, 'heat_maps/') 
                 
-        for ruta in [ruta_resultados, ruta_res_trial, ruta_yarbus_trial, ruta_yarbus_adj, ruta_heat_map]:
+        for ruta in [ruta_resultados, ruta_yarbus_trial, ruta_heat_map]:
             os.makedirs(ruta, exist_ok=True)       
         
         if not os.path.exists(dat_file) or not os.path.exists(answ_file):
@@ -228,8 +226,7 @@ if __name__ == "__main__":
             #     grafico_yarbus_trial(x_l_clean[mask_yarbus], y_l_clean[mask_yarbus],
             #         oc_data_trial, ruta_imagen, res_pantalla, save_yarbus, index)
                 
-
-            # 2.
+            # 2. Heatmaps
             grafico_heat_map(x_l_clean[mask_yarbus], y_l_clean[mask_yarbus],
                     ruta_imagen, res_pantalla, save_heatmap)
 
