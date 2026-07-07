@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 # --- RUTAS ---
 img_path_base = '/home/samuel/Documentos/Visual_Reasoning/img_question/img_test/'
-data_path = '/home/samuel/Documentos/Visual_Reasoning/data/data/'
+data_path = '/home/samuel/Documentos/Visual_Reasoning/data/processed/'
 
 # ==========================================
 # CLASE CALIBRADOR MODIFICADA
@@ -45,8 +45,21 @@ class CalibradorManual:
         
         try:
             full_img_path = os.path.join(img_path_base, info['img_name'])
-            img_bg = Image.open(full_img_path)
+            img_fg = Image.open(full_img_path)
+            
+            # 1. Crear un lienzo del tamaño exacto del monitor (fondo gris por defecto)
+            img_bg = Image.new('RGB', (1920, 1080), color=(173, 173, 173))
+            
+            # 2. Calcular el centro (offset)
+            offset_x = (1920 - img_fg.width) // 2
+            offset_y = (1080 - img_fg.height) // 2
+            
+            # 3. Pegar la imagen original en el centro del lienzo
+            img_bg.paste(img_fg, (offset_x, offset_y))
+            
+            # 4. Ahora sí la muestras completa
             ax.imshow(np.array(img_bg), extent=[0, 1920, 1080, 0])
+            
         except Exception as e:
             print(f"Error cargando imagen {info['img_name']}: {e}")
 
@@ -57,12 +70,19 @@ class CalibradorManual:
         x_seg = self.datos["x_left"][mask]
         y_seg = self.datos["y_left"][mask]
 
-        try:
-            x_seg_0 = self.datos["x_left_0"][mask[1:]] 
-            y_seg_0 = self.datos["y_left_0"][mask[1:]]
-        except:
-            x_seg_0 = self.datos["x_left_0"][mask] 
-            y_seg_0 = self.datos["y_left_0"][mask]
+        # Comprobamos si existen los datos de fijaciones primero
+        if "x_left_0" in self.datos and "y_left_0" in self.datos:
+            try:
+                x_seg_0 = self.datos["x_left_0"][mask[1:]] 
+                y_seg_0 = self.datos["y_left_0"][mask[1:]]
+            except Exception:
+                x_seg_0 = self.datos["x_left_0"][mask] 
+                y_seg_0 = self.datos["y_left_0"][mask]
+        else:
+            # Si no hay datos de fijaciones, creamos arreglos vacíos
+            # para que la gráfica de 'Mirada' siga funcionando sola.
+            x_seg_0 = np.array([])
+            y_seg_0 = np.array([])
         
         self.raw_segments.append({
             'mask': mask,
@@ -231,10 +251,15 @@ def procesar_sujetos():
 
         if REINICIAR_TODO or "x_left_adjusted" not in datos:
             print(">>> RESETEANDO DATOS A ORIGINALES (REINICIO) <<<")
-            datos["x_left_adjusted"] = np.copy(datos["x_left"])
-            datos["y_left_adjusted"] = np.copy(datos["y_left"])
-            datos["x_left_0_adjusted"] = np.copy(datos["x_left_0"])
-            datos["y_left_0_adjusted"] = np.copy(datos["y_left_0"])
+            
+            # Asegurarse de que las claves existen antes de copiarlas
+            if "x_left" in datos:
+                datos["x_left_adjusted"] = np.copy(datos["x_left"])
+                datos["y_left_adjusted"] = np.copy(datos["y_left"])
+                
+            if "x_left_0" in datos:
+                datos["x_left_0_adjusted"] = np.copy(datos["x_left_0"])
+                datos["y_left_0_adjusted"] = np.copy(datos["y_left_0"])
 
         df_answ = pd.read_csv(answ_file)
         
